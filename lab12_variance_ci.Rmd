@@ -1,0 +1,52 @@
+---
+title: "Confidence interval for variance of a normal distribution"
+output: pdf_document
+---
+
+Let's return to our example of human body temperatures.  We have measurements of the body temperature of 130 adults.
+
+```{r setup, message = FALSE, warning = FALSE, echo = FALSE}
+require(ggplot2)
+require(dplyr)
+bodytemp = read.table('http://www.amstat.org/publications/jse/datasets/normtemp.dat.txt')
+names(bodytemp) <- c('temp', 'sex', 'hr')
+
+ggplot(data = bodytemp, mapping = aes(x = temp)) +
+  geom_density()
+```
+
+We can see from the plot above that there is substantial variability in the body temperatures of adults.  If we model $X_1, \ldots, X_{130} \sim \text{Normal}(\mu, \sigma^2)$, this variability is described by the variance parameter $\sigma^2$.  Suppose we want to estimate that variance with a confidence interval.
+
+### 1. Find a 95% confidence interval for $\sigma^2$ based on the sample data.
+
+Set up:
+
+```{r}
+n <- nrow(bodytemp)
+s_sq <- var(bodytemp$temp)
+chisq_lower_quantile <- qchisq(0.025, df = n - 1)
+chisq_upper_quantile <- qchisq(0.975, df = n - 1)
+```
+
+Endpoint calculations (based on answer to part b in the written part of the example posted for April 6 2020)
+
+```{r}
+(n - 1) * s_sq / chisq_upper_quantile
+(n - 1) * s_sq / chisq_lower_quantile
+```
+
+We are 95% confident that $\sigma^2$ is between 0.427 and 0.697.
+
+### 2. Does your confidence interval from part 1 contain the true parameter value $\sigma^2$?
+
+Pick one of the options below.
+
+#### (a) Yes
+
+#### (b) No
+
+#### (c) There is probability 0.95 that it does, but we can't be sure.
+
+#### (d) We can't be sure, and we also can't make a statement like "there is probability 0.95 that it does."  The best we can say is that if we were to repeat the process of taking samples and computing confidence intervals many times, about 95% of the resulting confidence intervals would contain the actual value of $\sigma^2$.
+
+Option (d) is correct.  
